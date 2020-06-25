@@ -1,0 +1,22 @@
+.wrapper {
+    max-width: 1350px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 5%;
+}
+
+#game-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    .row {
+        display: flex;
+    }
+
+    .block {
+        width: 5rem;
+        height: 5rem;
+        border: .2rem solid grey;
+    }
+}

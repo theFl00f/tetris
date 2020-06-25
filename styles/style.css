@@ -220,3 +220,44 @@ textarea {
   clip: rect(0 0 0);
   overflow: hidden;
 }
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+}
+
+.wrapper {
+  max-width: 1350px;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 5%;
+}
+
+#game-board {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0 auto;
+}
+
+#game-board .row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#game-board .block {
+  width: 5rem;
+  height: 5rem;
+  border: .2rem solid grey;
+}

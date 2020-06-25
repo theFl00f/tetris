@@ -4,6 +4,11 @@ const height = 15;
 const width = 10;
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 const board = document.getElementById('game-board')
+let direction = "";
+// const state = 1;      // 1 running - 0 paused - 2 game over
+// const move = 0;
+// const occupiedblocks = new Array();
+// const points = 0;
 
 
 
@@ -54,10 +59,73 @@ const createShape = () => {
         shape: shape,
         color: color,
         location: location,
-        indexes: getBlockNumbers(shape, location)
+        // indexes: getBlockNumbers(shape, location)
     }
 }
 
 const drawShape = () => {
-    const shape = currentShape.shape
+    const shape = currentShape.shape;
+    let location = currentShape.location;
+
+    clearCurrent()
+
+    if (direction=='down') {
+        currentShape.location[1]++;
+    } 
+    else if (direction=='left') {
+        currentShape.location[0]--
+    }
+    else if (direction=='right') {
+        currentShape.location[0]++
+    }
+
+    for (let i = 0; i < shape.length; i++) {
+        const x = shape[i][0] + location[0];
+        const y = shape[i][1] + location[1];
+        const block = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
+        block.classList.add('filled');
+        block.style.backgroundColor = currentShape.color;
+    }
+    // currentShape.indexes = getBlockNumbers(currentShape.shape, currentShape.location)
 }
+
+const clearCurrent = () => {
+    const shape = currentShape.shape;
+    const location = currentShape.location;
+
+    for(let i = 0; i < shape.length; i++) {
+        const x = shape[i][0] + location[0];
+        const y = shape[i][1] + location[1];
+        const block = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
+        block.classList.remove('filled');
+        block.style.backgroundColor = '';
+    }
+}
+
+const checkKey = (e) => {
+    if (e.keyCode == '40' || e.keyCode == '37' || e.keyCode == '39') {
+        e.preventDefault();
+    }
+    if (e.keyCode == '40') {
+        direction = 'down';
+    } 
+    else if (e.keyCode == '37') {
+        direction = 'left';
+    }
+    else if (e.keyCode == '39') {
+        direction = 'right'
+    }
+    drawShape()
+}
+
+const start = () => {
+    createBoard();
+    createShapes();
+    createShape();
+    drawShape();
+    document.onkeydown = checkKey
+}
+
+window.addEventListener('load', () => {
+    start();
+})
