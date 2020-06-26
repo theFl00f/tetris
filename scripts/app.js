@@ -184,10 +184,9 @@ const collided = () => {
 
         occupiedblocks = occupiedblocks.concat(currentShape.indexes);
         createShape();
-        // checkRows();
+        checkRows();
     }
 }
-
 
 
 
