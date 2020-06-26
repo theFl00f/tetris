@@ -26,7 +26,8 @@ const createBoard = () => {
             block.dataset.y = y;
             block.dataset.index = counter;
             block.dataset.state = 0;
-            block.innerHTML = `0: ${counter}`
+            block.innerHTML = `${counter} <br>
+            ${x}, ${y}`
             row.appendChild(block);
             counter++;
         }
@@ -61,10 +62,13 @@ const createShape = () => {
         location: location,
         indexes: getBlockNumbers(shape, location)
     }
+
+
 }
 
 const drawShape = () => {
-    const shape = currentShape.shape;
+    collided()
+    let shape = currentShape.shape;
     let location = currentShape.location;
 
     clearCurrent()
@@ -78,7 +82,7 @@ const drawShape = () => {
     else if (direction=='right') {
         currentShape.location[0]++
     }
-
+    direction = '';
     for (let i = 0; i < shape.length; i++) {
         const x = shape[i][0] + location[0];
         const y = shape[i][1] + location[1];
@@ -86,7 +90,7 @@ const drawShape = () => {
         block.classList.add('filled');
         block.style.backgroundColor = currentShape.color;
     }
-    // currentShape.indexes = getBlockNumbers(currentShape.shape, currentShape.location)
+    currentShape.indexes = getBlockNumbers(currentShape.shape, currentShape.location)
 }
 
 const clearCurrent = () => {
@@ -103,21 +107,34 @@ const clearCurrent = () => {
 }
 
 const checkKey = (e) => {
-    if (e.keyCode == '40' || e.keyCode == '37' || e.keyCode == '39') {
+    if (e.keyCode == '40' || e.keyCode == '37' || e.keyCode == '38' || e.keyCode == '39') {
         e.preventDefault();
     }
-    if (e.keyCode == '40') {
+    if (e.keyCode === 40) {
         direction = 'down';
     } 
-    else if (e.keyCode == '37') {
+    else if (e.keyCode === 37) {
         direction = 'left';
     }
     else if (e.keyCode == '39') {
         direction = 'right'
     }
-    drawShape()
-    isCollidingWall()
-    collided()
+    if (isCollidingWall() === false) {
+        drawShape()
+    }
+}
+
+
+const getBlockNumbers = (shape, location) => {
+    const numbers = new Array();
+    for (let i = 0; i < shape.length; i++) {
+        let x = shape[i][0] + location[0];
+        let y = shape[i][1] + location[1];
+
+        let block = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+        numbers.push(block.dataset.index)
+    }
+    return numbers;
 }
 
 const isCollidingWall = () => {
@@ -155,6 +172,7 @@ const collided = () => {
     const blocks = currentShape.shape
     const offset = currentShape.location;
     let collision = false;
+
     for (let i = 0; i < blocks.length; i++) {
         let block = blocks[i];
         let x = block[0] + offset[0];
@@ -166,7 +184,7 @@ const collided = () => {
         
         const blockDOM = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
 
-        if (y == height || occupiedblocks.indexOf(blockDOM.dataset.index) >= 0) {
+        if (y == height || occupiedblocks.indexOf(blockDOM.dataset.index) > -1) {
             collision = true;
             break;
         }
@@ -188,6 +206,10 @@ const collided = () => {
     }
 }
 
+// const checkRows = () => {
+
+// }
+
 
 
 
@@ -202,3 +224,5 @@ const start = () => {
 window.addEventListener('load', () => {
     start();
 })
+
+
