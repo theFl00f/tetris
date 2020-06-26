@@ -5,9 +5,9 @@ const width = 10;
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 const board = document.getElementById('game-board')
 let direction = "";
-// const state = 1;      // 1 running - 0 paused - 2 game over
-// const move = 0;
-// const occupiedblocks = new Array();
+let state = 1;      // 1 running - 0 paused - 2 game over
+let move = 0;
+let occupiedblocks = new Array();
 // const points = 0;
 
 
@@ -59,7 +59,7 @@ const createShape = () => {
         shape: shape,
         color: color,
         location: location,
-        // indexes: getBlockNumbers(shape, location)
+        indexes: getBlockNumbers(shape, location)
     }
 }
 
@@ -116,7 +116,80 @@ const checkKey = (e) => {
         direction = 'right'
     }
     drawShape()
+    isCollidingWall()
+    collided()
 }
+
+const isCollidingWall = () => {
+    const blocks = currentShape.shape
+    const offset = currentShape.location;
+    let collision = false;
+    for (let i = 0; i < blocks.length; i++) {
+        let block = blocks[i];
+        let x = block[0] + offset[0];
+        let y = block[1] + offset[1];
+        if (direction == 'left') {
+            x--;
+        } 
+        else if (direction == 'right') {
+            x++;
+        }
+
+        const blockDOM = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
+
+        if (occupiedblocks.indexOf(blockDOM.dataset.index) >= 0) {
+            collision = true;
+            break;
+        } else if (x < 0 && direction == 'left' ) {
+            collision = true;
+            break;
+        } else if (x == width && direction == 'right') {
+            collision = true;
+            break;
+        }
+    }
+    return collision;
+}
+
+const collided = () => {
+    const blocks = currentShape.shape
+    const offset = currentShape.location;
+    let collision = false;
+    for (let i = 0; i < blocks.length; i++) {
+        let block = blocks[i];
+        let x = block[0] + offset[0];
+        let y = block[1] + offset[1];
+
+        if (direction == 'down') {
+            y++;
+        }
+        
+        const blockDOM = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
+
+        if (y == height || occupiedblocks.indexOf(blockDOM.dataset.index) >= 0) {
+            collision = true;
+            break;
+        }
+
+    }
+    if (collision) {
+        for (let i = 0; i < blocks.length; i++) {
+            let block = blocks[i];
+            let x = block[0] + offset[0];
+            let y = block[1] + offset[1];
+            const blockDOM = document.querySelector(`[data-x="${x}"][data-y="${y}"]`)
+            blockDOM.dataset.state = '1'
+
+        }
+
+        occupiedblocks = occupiedblocks.concat(currentShape.indexes);
+        createShape();
+        // checkRows();
+    }
+}
+
+
+
 
 const start = () => {
     createBoard();
