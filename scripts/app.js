@@ -206,9 +206,65 @@ const collided = () => {
     }
 }
 
-// const checkRows = () => {
+const checkRows = () => {
+    let counter = 0;
+    let start = 0;
+    
+    for (let y = 0; y < height; y++) {
+        let filled = true;
+        for (let x = 0; x < width; x++) {
+            const blockDOM =  document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+            if (blockDOM.dataset.state == 0) {
+                filled = false;
+                break;
+            }
+        }
 
-// }
+        if (filled) {
+            if (start == 0) {
+                start = y;
+            }
+            counter++;
+
+            for (let i = 0; i < width; i++) {
+                const blockDOM = document.querySelector(`[data-x="${i}"][data-y="${y}"]`);
+                blockDOM.dataset.state = 0;
+                blockDOM.style.backgroundColor = 'white';
+                removeIndex(blockDOM.dataset.index)
+            }
+        }
+    }
+
+    if (counter > 0) {
+        shiftDown(counter, start)
+    }
+}
+
+const removeIndex = (index) => {
+    const location = occupiedblocks.indexOf(index);
+    occupiedblocks.splice(location, 1)
+}
+
+const shiftDown = (counter, start) => {
+    for (let i = start - 1; i >= 0; i--) {
+        for (let x = 0; x < width; x++) {
+            let y = i + counter;
+            const blockDOM = document.querySelector(`[data-x="${x}"][data-y="${i}"]`);
+            const nextBlock = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+    
+            if (blockDOM.dataset.state == 1) {
+                nextBlock.style.backgroundColor = blockDOM.style.backgroundColor;
+                nextBlock.dataset.state = 1;
+                blockDOM.style.backgroundColor = 'white';
+                blockDOM.dataset.state = 0;
+                removeIndex(blockDOM.dataset.index);
+                occupiedblocks.push(nextBlock.dataset.index)
+            }
+        }
+
+    }
+}
+
 
 
 
