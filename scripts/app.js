@@ -265,7 +265,33 @@ const shiftDown = (counter, start) => {
     }
 }
 
+const rotate = () => {
+    let newShape = new Array();
+    let shape = currentShape.shape;
 
+    for (let i = 0; i < shape.length; i++) {
+        let x = shape[i][0];
+        let y = shape[i][1];
+        let newX = (getWidth() - y)
+        let newY = x;
+        newShape.push([newX, newY])
+    }
+
+    clearCurrent();
+    currentShape.shape = newShape;
+    currentShape.indexes = getBlockNumbers(newShape, currentShape);
+}
+
+const getWidth = () => {
+    let width = 0;
+
+    for (let i = 0; i < currentShape.shape.length; i++) {
+        let block = currentShape.shape[i];
+        if (block[0] > width) {
+            
+        }
+    }
+}
 
 
 const start = () => {
